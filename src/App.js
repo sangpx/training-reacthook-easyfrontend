@@ -1,6 +1,7 @@
 import "./App.scss";
 //import Content from "./Content.js";
-//import { useState } from "react";
+import { useState } from "react";
+import ColorBox from "./components/ColorBox";
 
 //render Component cua Evondev
 // function Feature() {
@@ -69,6 +70,8 @@ import "./App.scss";
 // bai toan: lam mot ung dung DEM SO, bat dau dem tu so 1
 // co mot nut bam vao se thay doi so theo thu tu tang dan
 
+//hooks easyfrontend
+
 //parent component
 function App() {
   return (
@@ -100,6 +103,7 @@ function App() {
         />
       ))} */}
       <h1>hello react hook</h1>
+      <ColorBox />
     </div>
   );
 }
