@@ -2,6 +2,7 @@ import "./App.scss";
 //import Content from "./Content.js";
 import { useState } from "react";
 import ColorBox from "./components/ColorBox";
+import TodoList from "./components/TodoList";
 
 //render Component cua Evondev
 // function Feature() {
@@ -74,6 +75,23 @@ import ColorBox from "./components/ColorBox";
 
 //parent component
 function App() {
+  const [todoList, setTodoList] = useState([
+    { id: 1, title: "quet nha" },
+    { id: 2, title: "rua bat" },
+    { id: 3, title: "giat quan ao" },
+  ]);
+
+  //CLick vao todo thi XOA todo
+  const handleDeleteTodoClick = (todo) => {
+    const index = todoList.findIndex((x) => x.id === todo.id);
+    if (index < 0) return;
+
+    //tao Mang moi
+    const newTodoList = [...todoList]; // clone Mang cu
+    newTodoList.splice(index, 1);
+    setTodoList(newTodoList);
+  };
+
   return (
     <div className="app">
       {/*Childrent component */}
@@ -102,8 +120,9 @@ function App() {
           image={course.image_url}
         />
       ))} */}
-      <h1>hello react hook</h1>
       <ColorBox />
+      <h1>todoList react hook</h1>
+      <TodoList todos={todoList} onTodoClick={handleDeleteTodoClick} />
     </div>
   );
 }
