@@ -3,6 +3,7 @@ import "./App.scss";
 import { useState } from "react";
 import ColorBox from "./components/ColorBox";
 import TodoList from "./components/TodoList";
+import TodoForm from "./components/TodoForm";
 
 //render Component cua Evondev
 // function Feature() {
@@ -92,6 +93,24 @@ function App() {
     setTodoList(newTodoList);
   };
 
+  //submit
+  const handleTodoFormSubmit = (formValues) => {
+    console.log("form-submit", formValues);
+
+    //add new todo to current todoList
+    const newTodo = {
+      id: todoList.length + 1,
+      ...formValues,
+    };
+
+    //clone current todo
+    const newTodoList = [...todoList];
+    newTodoList.push(newTodo);
+
+    //cap nhat lai todoList
+    setTodoList(newTodoList);
+  };
+
   return (
     <div className="app">
       {/*Childrent component */}
@@ -122,6 +141,7 @@ function App() {
       ))} */}
       <ColorBox />
       <h1>todoList react hook</h1>
+      <TodoForm onSubmit={handleTodoFormSubmit} />
       <TodoList todos={todoList} onTodoClick={handleDeleteTodoClick} />
     </div>
   );
