@@ -5,6 +5,8 @@ import ColorBox from "./components/ColorBox";
 import TodoList from "./components/TodoList";
 import TodoForm from "./components/TodoForm";
 import PostList from "./components/PostList";
+import Pagination from "./components/Pagination";
+import queryString from "query-string";
 
 //render khoa hoc ra ngoai man hinh
 // const CourseItem = (props) => (
@@ -42,8 +44,6 @@ function App() {
 
   //submit
   const handleTodoFormSubmit = (formValues) => {
-    console.log("form-submit", formValues);
-
     //add new todo to current todoList
     const newTodo = {
       id: todoList.length + 1,
@@ -61,25 +61,47 @@ function App() {
   //state call API
   const [postList, setPostList] = useState([]);
 
+  //state pagination
+  const [pagination, setPagination] = useState({
+    _page: 1,
+    _limit: 10,
+    _totalRows: 1,
+  });
+
+  const [filters, setFilters] = useState({
+    _limit: 10,
+    _page: 1,
+  });
+
+  const handlePageChange = (newPage) => {
+    console.log("new page", newPage);
+    setFilters({
+      ...filters, // bao luu filters
+      _page: newPage,
+    });
+  };
+
   //emty array chi render dung mot lan dau
   useEffect(() => {
     //call API
     async function fetchPostList() {
       try {
-        const requestURL =
-          "http://js-post-api.herokuapp.com/api/posts?_limit=10&_page=1";
+        //_limit=10, _page=3
+        const paramsString = queryString.stringify(filters);
+        const requestURL = `http://js-post-api.herokuapp.com/api/posts?${paramsString}`;
         const response = await fetch(requestURL);
         const responseJSON = await response.json();
-        console.log({ responseJSON });
-        const { data } = responseJSON;
-        setPostList(data);
+
+        const { data, pagination } = responseJSON;
+        setPostList(data); //cap nhat lai du lieu post moi
+        setPagination(pagination); // cap nhat lai trang moi
       } catch (error) {
         console.log("failed to fetch post list", error.message);
       }
     }
 
     fetchPostList();
-  }, []);
+  }, [filters]);
 
   return (
     <div className="app">
@@ -98,6 +120,7 @@ function App() {
       <TodoForm onSubmit={handleTodoFormSubmit} />
       <TodoList todos={todoList} onTodoClick={handleDeleteTodoClick} />
       <PostList posts={postList} />
+      <Pagination pagination={pagination} onPageChange={handlePageChange} />
     </div>
   );
 }
