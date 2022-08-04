@@ -8,6 +8,7 @@ import PostList from "./components/PostList";
 import Pagination from "./components/Pagination";
 import queryString from "query-string";
 import PostFiltersForm from "./components/PostFiltersForm";
+import Clock from "./components/Clock";
 
 //render khoa hoc ra ngoai man hinh
 // const CourseItem = (props) => (
@@ -48,6 +49,9 @@ function App() {
     _limit: 10,
     _page: 1,
   });
+
+  //state show Clock
+  const [showClock, setShowClock] = useState(true);
 
   //CLick vao todo thi XOA todo: handleDeleteTodoClick
   const handleDeleteTodoClick = (todo) => {
@@ -134,6 +138,8 @@ function App() {
       <PostFiltersForm onSubmit={handleFiltersChange} />
       <PostList posts={postList} />
       <Pagination pagination={pagination} onPageChange={handlePageChange} />
+      {showClock && <Clock />}
+      <button onClick={() => setShowClock(false)}>Hide Clock</button>
     </div>
   );
 }
