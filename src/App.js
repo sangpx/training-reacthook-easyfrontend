@@ -7,6 +7,7 @@ import TodoForm from "./components/TodoForm";
 import PostList from "./components/PostList";
 import Pagination from "./components/Pagination";
 import queryString from "query-string";
+import PostFiltersForm from "./components/PostFiltersForm";
 
 //render khoa hoc ra ngoai man hinh
 // const CourseItem = (props) => (
@@ -25,13 +26,30 @@ import queryString from "query-string";
 
 //parent component
 function App() {
+  //state todoList
   const [todoList, setTodoList] = useState([
     { id: 1, title: "quet nha" },
     { id: 2, title: "rua bat" },
     { id: 3, title: "giat quan ao" },
   ]);
 
-  //CLick vao todo thi XOA todo
+  //state call API
+  const [postList, setPostList] = useState([]);
+
+  //state pagination
+  const [pagination, setPagination] = useState({
+    _page: 1,
+    _limit: 10,
+    _totalRows: 1,
+  });
+
+  //state gioi han trang
+  const [filters, setFilters] = useState({
+    _limit: 10,
+    _page: 1,
+  });
+
+  //CLick vao todo thi XOA todo: handleDeleteTodoClick
   const handleDeleteTodoClick = (todo) => {
     const index = todoList.findIndex((x) => x.id === todo.id);
     if (index < 0) return;
@@ -42,7 +60,7 @@ function App() {
     setTodoList(newTodoList);
   };
 
-  //submit
+  //handleTodoFormSubmit
   const handleTodoFormSubmit = (formValues) => {
     //add new todo to current todoList
     const newTodo = {
@@ -58,23 +76,8 @@ function App() {
     setTodoList(newTodoList);
   };
 
-  //state call API
-  const [postList, setPostList] = useState([]);
-
-  //state pagination
-  const [pagination, setPagination] = useState({
-    _page: 1,
-    _limit: 10,
-    _totalRows: 1,
-  });
-
-  const [filters, setFilters] = useState({
-    _limit: 10,
-    _page: 1,
-  });
-
+  //handlePageChange
   const handlePageChange = (newPage) => {
-    console.log("new page", newPage);
     setFilters({
       ...filters, // bao luu filters
       _page: newPage,
@@ -103,6 +106,15 @@ function App() {
     fetchPostList();
   }, [filters]);
 
+  //handleFiltersChange
+  const handleFiltersChange = (newFilters) => {
+    setFilters({
+      ...filters,
+      _page: 1,
+      tilte_like: newFilters.searchTerm,
+    });
+  };
+
   return (
     <div className="app">
       {/* render Course */}
@@ -119,6 +131,7 @@ function App() {
       <h1>react hook</h1>
       <TodoForm onSubmit={handleTodoFormSubmit} />
       <TodoList todos={todoList} onTodoClick={handleDeleteTodoClick} />
+      <PostFiltersForm onSubmit={handleFiltersChange} />
       <PostList posts={postList} />
       <Pagination pagination={pagination} onPageChange={handlePageChange} />
     </div>
